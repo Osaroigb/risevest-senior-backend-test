@@ -1,9 +1,13 @@
-import DomainError from './DomainError';
+import { DomainError } from './DomainError';
 
 export class BadRequestError extends DomainError {
   protected error_name = 'badRequest';
 
-  public constructor(message = 'Invalid request data', error?: Error, data?: any) {
+  public constructor(
+    message = 'Invalid request data',
+    error?: Error,
+    data?: any,
+  ) {
     super(message, error, data, false);
 
     // Check if the error object contains an httpCode property and use it if available

@@ -1,4 +1,4 @@
-import DomainError from './DomainError';
+import { DomainError } from './DomainError';
 
 export class ConflictError extends DomainError {
   protected httpCode = 409;
@@ -7,7 +7,7 @@ export class ConflictError extends DomainError {
   public constructor(
     message = 'Request could not be completed due to a conflict with the current state of the target resource',
     error?: Error,
-    data?: any
+    data?: any,
   ) {
     super(message, error, data, false);
     Error.captureStackTrace(this, this.constructor);

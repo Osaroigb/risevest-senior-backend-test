@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { DomainError } from 'src/errors';
+import { DomainError } from '../errors/DomainError';
 
 export const handleError = (
   error: Error,
