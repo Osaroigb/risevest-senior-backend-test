@@ -17,5 +17,13 @@ export const dataSourceOptions: DataSourceOptions = {
   migrationsRun: false,
 };
 
+export const TestDataSource = new DataSource({
+  type: 'sqlite',
+  database: ':memory:',
+  entities: [`${__dirname}/../entities/*entity{.ts,.js}`],
+  synchronize: true,
+  logging: false,
+});
+
 const dataSource = new DataSource(dataSourceOptions);
 export default dataSource;

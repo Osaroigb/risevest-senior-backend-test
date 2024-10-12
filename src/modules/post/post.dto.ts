@@ -6,6 +6,6 @@ export class CreatePostValidationSchema {
   title: string;
 
   @IsNotEmpty({ message: 'Content is required' })
-  @Length(25, 500, { message: 'Title must be atleast 25 characters' })
+  @Length(25, 500, { message: 'Content must be atleast 25 characters' })
   content: string;
 }
