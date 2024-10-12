@@ -4,6 +4,7 @@ import {
 } from './user.dto';
 
 import dataSource from '../../config/ormconfig';
+import { get, set, del } from '../../utils/redis';
 import { User } from '../../entities/User.entity';
 import { PageDto } from '../../pagination/page.dto';
 import { ApiResponse } from '../../config/interface';
@@ -12,6 +13,7 @@ import { UnAuthorizedError } from '../../errors/UnAuthorizedError';
 import { PageOptionsDto } from '../../pagination/page-options.dto';
 import { ResourceNotFoundError } from '../../errors/ResourceNotFoundError';
 import { generateJwt, hashString, isHashValid } from '../../helpers/utilities';
+import { ONE_HOUR_IN_MILLISECONDS, USER_CACHE_KEY } from '../../utils/constant';
 
 const userRepository = dataSource.getRepository(User);
 
@@ -35,6 +37,9 @@ export const processCreateUser = async (
   });
 
   const savedUser = await userRepository.save(newUser);
+
+  // Invalidate the user cache
+  await del(USER_CACHE_KEY);
 
   return {
     success: true,
@@ -89,6 +94,22 @@ export const processGetAllUsers = async (
 ): Promise<ApiResponse> => {
   const { skip, order, pageSize } = pageOptions;
 
+  // Try to get the cached data from Redis
+  const cachedUsers = await get(USER_CACHE_KEY);
+
+  if (cachedUsers) {
+    const users = JSON.parse(cachedUsers);
+    const items = new PageDto(users, users.length, pageOptions);
+
+    return {
+      success: true,
+      message: 'Users retrieved from cache',
+      statusCode: 200,
+      data: items.data,
+      meta: items.meta,
+    };
+  }
+
   const [users, count] = await userRepository.findAndCount({
     order: { createdAt: order },
     skip,
@@ -96,6 +117,8 @@ export const processGetAllUsers = async (
     select: ['id', 'name', 'email'],
   });
 
+  // Cache the data in Redis for future requests up to 1 hour
+  await set(USER_CACHE_KEY, JSON.stringify(users), ONE_HOUR_IN_MILLISECONDS);
   const items = new PageDto(users, count, pageOptions);
 
   // Return the paginated result

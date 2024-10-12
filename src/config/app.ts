@@ -45,6 +45,35 @@ const appConfig = convict({
       format: String,
     },
   },
+  redis: {
+    host: {
+      default: '127.0.0.1',
+      doc: 'Redis database host name/IP',
+      env: 'REDIS_HOST',
+      format: '*',
+    },
+    port: {
+      default: '6379',
+      doc: 'Redis database port',
+      env: 'REDIS_PORT',
+      format: 'port',
+    },
+    password: {
+      doc: 'Redis database password',
+      env: 'REDIS_PASSWORD',
+      format: String,
+      nullable: true,
+      default: '',
+      sensitive: true,
+    },
+    username: {
+      default: '',
+      doc: 'Redis database username',
+      env: 'REDIS_USERNAME',
+      nullable: false,
+      format: String,
+    },
+  },
 });
 
 export default appConfig;

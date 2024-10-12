@@ -11,6 +11,7 @@ import stoppable from 'stoppable';
 import appConfig from './config/app';
 import { logger } from './utils/logger';
 import dataSource from './config/ormconfig';
+import { initiateConnection as connectToRedis } from './utils/redis';
 
 const port =
   Number(process.env.APP_PORT) || appConfig.get('port') || normalizePort(3300);
@@ -29,6 +30,9 @@ const startServer = async () => {
     // Initialize the database using the dataSource from ormconfig.ts
     await dataSource.initialize();
     logger.info('Database connected successfully!');
+
+    // Connect to Redis
+    connectToRedis();
 
     /**
      * Listen on the provided port, on all network interfaces

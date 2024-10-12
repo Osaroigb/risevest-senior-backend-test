@@ -15,6 +15,7 @@ export const handleError = (
     }
 
     // console.log(responseStream);
+    console.error(error);
 
     return responseStream.status(500).send({
       success: false,
