@@ -5,9 +5,11 @@ import {
 
 import dataSource from '../../config/ormconfig';
 import { User } from '../../entities/User.entity';
+import { PageDto } from 'src/pagination/page.dto';
 import { ApiResponse } from '../../config/interface';
 import { ConflictError } from '../../errors/ConflictError';
 import { UnAuthorizedError } from 'src/errors/UnAuthorizedError';
+import { PageOptionsDto } from 'src/pagination/page-options.dto';
 import { generateJwt, hashString, isHashValid } from '../../helpers/utilities';
 
 const userRepository = dataSource.getRepository(User);
@@ -74,5 +76,26 @@ export const processLoginUser = async (
       },
       userId: user.id,
     },
+  };
+};
+
+export const processGetAllUsers = async (
+  pageOptions: PageOptionsDto,
+): Promise<ApiResponse> => {
+  const { skip, order, pageSize } = pageOptions;
+
+  const [users, count] = await userRepository.findAndCount({
+    order: { createdAt: order },
+    skip,
+    take: pageSize,
+    select: ['id', 'name', 'email'],
+  });
+
+  // Return the paginated result
+  return {
+    success: true,
+    message: 'Users retrieved successfully',
+    statusCode: 200,
+    data: new PageDto(users, count, pageOptions),
   };
 };
