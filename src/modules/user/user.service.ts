@@ -10,6 +10,7 @@ import { ApiResponse } from '../../config/interface';
 import { ConflictError } from '../../errors/ConflictError';
 import { UnAuthorizedError } from '../../errors/UnAuthorizedError';
 import { PageOptionsDto } from '../../pagination/page-options.dto';
+import { ResourceNotFoundError } from '../../errors/ResourceNotFoundError';
 import { generateJwt, hashString, isHashValid } from '../../helpers/utilities';
 
 const userRepository = dataSource.getRepository(User);
@@ -102,4 +103,16 @@ export const processGetAllUsers = async (
     statusCode: 200,
     data: new PageDto(users, count, pageOptions),
   };
+};
+
+export const findUserById = async (userId: number) => {
+  const user = await userRepository.findOne({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new ResourceNotFoundError('User not found');
+  }
+
+  return user;
 };
