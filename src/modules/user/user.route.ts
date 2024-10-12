@@ -5,11 +5,12 @@ import {
 
 import { Router } from 'express';
 import * as userController from './user.controller';
+import { authenticateUserJwt } from 'src/middlewares/authenticate';
 
 const router = Router();
 
 router.post('/', createUserValidator, userController.createUser);
 router.post('/login', loginUserValidator, userController.loginUser);
 
-router.get('/', userController.getAllUsers);
+router.get('/', authenticateUserJwt, userController.getAllUsers);
 export default router;

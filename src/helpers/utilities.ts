@@ -33,3 +33,14 @@ export const generateJwt = (payload: {
 
   return { token };
 };
+
+export const verifyJwt = (jwtToken: string): string | jwt.JwtPayload => {
+  const secretKey = process.env.JWT_SECRET_KEY as string;
+
+  const decoded = jwt.verify(jwtToken, secretKey, {
+    issuer: 'risevest',
+    algorithms: ['HS256'],
+  });
+
+  return decoded;
+};
