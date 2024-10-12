@@ -11,3 +11,10 @@ export interface DatabaseConfig {
   logging: boolean;
   autoLoadEntities: boolean;
 }
+
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: any;
+}
