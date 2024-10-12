@@ -29,6 +29,22 @@ const appConfig = convict({
     nullable: true,
     format: Boolean,
   },
+  jwt: {
+    expiry: {
+      default: 7200,
+      doc: 'JWT expiry in seconds',
+      env: 'JWT_EXPIRY_IN_SECONDS',
+      nullable: true,
+      format: Number,
+    },
+    secretKey: {
+      default: '',
+      doc: 'JWT secret key',
+      env: 'JWT_SECRET_KEY',
+      nullable: false,
+      format: String,
+    },
+  },
 });
 
 export default appConfig;

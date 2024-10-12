@@ -1,9 +1,14 @@
+import {
+  LoginUserValidationSchema,
+  CreateUserValidationSchema,
+} from './user.dto';
+
 import dataSource from '../../config/ormconfig';
 import { User } from '../../entities/User.entity';
 import { ApiResponse } from '../../config/interface';
-import { hashString } from '../../helpers/utilities';
-import { CreateUserValidationSchema } from './user.dto';
 import { ConflictError } from '../../errors/ConflictError';
+import { UnAuthorizedError } from 'src/errors/UnAuthorizedError';
+import { generateJwt, hashString, isHashValid } from '../../helpers/utilities';
 
 const userRepository = dataSource.getRepository(User);
 
@@ -33,5 +38,41 @@ export const processCreateUser = async (
     message: 'User created successfully',
     statusCode: 201,
     data: savedUser,
+  };
+};
+
+export const processLoginUser = async (
+  userData: LoginUserValidationSchema,
+): Promise<ApiResponse> => {
+  const user = await userRepository.findOne({
+    where: { email: userData.email },
+  });
+
+  if (!user) throw new UnAuthorizedError('Email or Password is incorrect');
+
+  const isValidPassword = await isHashValid(userData.password, user.password);
+  if (!isValidPassword) throw new UnAuthorizedError('Password is incorrect');
+
+  const jwt = generateJwt({
+    data: {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    },
+    sub: user.id.toString(),
+  });
+
+  return {
+    success: true,
+    message: 'Login successful',
+    statusCode: 200,
+    data: {
+      auth: {
+        ...jwt,
+      },
+      userId: user.id,
+    },
   };
 };
