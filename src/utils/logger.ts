@@ -1,4 +1,4 @@
-import config from '../config';
+import appConfig from '../config/app';
 import jsonStringify from 'safe-json-stringify';
 import { createLogger, transports, format } from 'winston';
 
@@ -20,7 +20,7 @@ const logger = createLogger({
   ],
 });
 
-const showLogs = config.get('showLogs');
+const showLogs = appConfig.get('showLogs');
 
 if (showLogs) {
   const customFormat = format.printf(

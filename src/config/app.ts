@@ -1,6 +1,6 @@
 import convict from 'convict';
 
-const config = convict({
+const appConfig = convict({
   env: {
     default: 'development',
     env: 'NODE_ENV',
@@ -31,4 +31,4 @@ const config = convict({
   },
 });
 
-export default config;
+export default appConfig;

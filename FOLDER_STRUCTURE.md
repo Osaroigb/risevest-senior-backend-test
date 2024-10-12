@@ -9,7 +9,9 @@ OPENSAUCE
 │ │
 │ ├── config
 │ │ │
-│ │ └── index.ts
+│ │ ├── app.ts
+│ │ ├── database.ts
+│ │ └── interface.ts
 │ │
 │ ├── errors
 │ │ │

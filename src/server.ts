@@ -1,8 +1,3 @@
-import app from './app';
-import http from 'http';
-import config from './config';
-import stoppable from 'stoppable';
-
 import {
   handleError,
   onListening,
@@ -10,8 +5,15 @@ import {
   gracefulShutdown,
 } from './helpers/server';
 
+import app from './app';
+import http from 'http';
+import stoppable from 'stoppable';
+import appConfig from './config/app';
+import { logger } from './utils/logger';
+import dataSource from './config/ormconfig';
+
 const port =
-  Number(process.env.APP_PORT) || config.get('port') || normalizePort(3300);
+  Number(process.env.APP_PORT) || appConfig.get('port') || normalizePort(3300);
 app.set('port', port);
 
 /**
@@ -20,18 +22,38 @@ app.set('port', port);
 const server = http.createServer(app);
 
 /**
- * Listen on provided port, on all network interfaces
+ * Initialize database connection and start the server
  */
-server.listen(port);
-server.on('error', (error) => handleError(error, port));
-server.on('listening', () => onListening(server));
+const startServer = async () => {
+  try {
+    // Initialize the database using the dataSource from ormconfig.ts
+    await dataSource.initialize();
+    logger.info('Database connected successfully!');
 
-// quit on ctrl+c
-process.on('SIGINT', () =>
-  gracefulShutdown(stoppable(server), 'Got SIGINT. Graceful shutdown'),
-);
+    /**
+     * Listen on the provided port, on all network interfaces
+     */
+    server.listen(port);
+    server.on('error', (error) => handleError(error, port));
+    server.on('listening', () => onListening(server));
 
-// quit properly
-process.on('SIGTERM', () =>
-  gracefulShutdown(stoppable(server), 'Got SIGTERM. Graceful shutdown'),
-);
+    // Handle graceful shutdown
+    process.on('SIGINT', () =>
+      gracefulShutdown(stoppable(server), 'Got SIGINT. Graceful shutdown'),
+    );
+
+    process.on('SIGTERM', () =>
+      gracefulShutdown(stoppable(server), 'Got SIGTERM. Graceful shutdown'),
+    );
+  } catch (error) {
+    logger.error(
+      'Failed to start the server due to database connection error',
+      error,
+    );
+
+    process.exit(1); // Exit process with failure code
+  }
+};
+
+// Start the server
+startServer();
