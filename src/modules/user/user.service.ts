@@ -96,12 +96,15 @@ export const processGetAllUsers = async (
     select: ['id', 'name', 'email'],
   });
 
+  const items = new PageDto(users, count, pageOptions);
+
   // Return the paginated result
   return {
     success: true,
     message: 'Users retrieved successfully',
     statusCode: 200,
-    data: new PageDto(users, count, pageOptions),
+    data: items.data,
+    meta: items.meta,
   };
 };
 

@@ -5,6 +5,7 @@ import { findUserById } from '../user/user.service';
 import { ApiResponse } from '../../config/interface';
 import { CreatePostValidationSchema } from './post.dto';
 import { PageOptionsDto } from '../../pagination/page-options.dto';
+import { ResourceNotFoundError } from '../../errors/ResourceNotFoundError';
 
 const postRepository = dataSource.getRepository(Post);
 
@@ -58,10 +59,25 @@ export const getPostsForUser = async (
     };
   }
 
+  const items = new PageDto(posts, count, pageOptions);
+
   return {
     success: true,
     message: 'Posts retrieved successfully',
     statusCode: 200,
-    data: new PageDto(posts, count, pageOptions),
+    data: items.data,
+    meta: items.meta,
   };
+};
+
+export const findPostById = async (postId: number) => {
+  const post = await postRepository.findOne({
+    where: { id: postId },
+  });
+
+  if (!post) {
+    throw new ResourceNotFoundError('Post not found');
+  }
+
+  return post;
 };

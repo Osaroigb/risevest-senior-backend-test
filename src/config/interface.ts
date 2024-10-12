@@ -12,9 +12,19 @@ export interface DatabaseConfig {
   autoLoadEntities: boolean;
 }
 
+interface PaginationResponse {
+  page: number;
+  pageSize: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
 export interface ApiResponse {
   success: boolean;
   message: string;
   statusCode: number;
   data: any;
+  meta?: PaginationResponse;
 }
