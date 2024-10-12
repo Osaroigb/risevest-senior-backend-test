@@ -5,11 +5,11 @@ import {
 
 import dataSource from '../../config/ormconfig';
 import { User } from '../../entities/User.entity';
-import { PageDto } from 'src/pagination/page.dto';
+import { PageDto } from '../../pagination/page.dto';
 import { ApiResponse } from '../../config/interface';
 import { ConflictError } from '../../errors/ConflictError';
-import { UnAuthorizedError } from 'src/errors/UnAuthorizedError';
-import { PageOptionsDto } from 'src/pagination/page-options.dto';
+import { UnAuthorizedError } from '../../errors/UnAuthorizedError';
+import { PageOptionsDto } from '../../pagination/page-options.dto';
 import { generateJwt, hashString, isHashValid } from '../../helpers/utilities';
 
 const userRepository = dataSource.getRepository(User);
@@ -39,7 +39,11 @@ export const processCreateUser = async (
     success: true,
     message: 'User created successfully',
     statusCode: 201,
-    data: savedUser,
+    data: {
+      userId: savedUser.id,
+      name: savedUser.name,
+      email: savedUser.email,
+    },
   };
 };
 

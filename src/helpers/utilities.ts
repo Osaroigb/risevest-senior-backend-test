@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import appConfig from 'src/config/app';
+import appConfig from '../config/app';
 
 export const hashString = async (
   plainText: string,
@@ -22,7 +22,7 @@ export const generateJwt = (payload: {
   data?: { [key: string]: any };
   sub?: string;
 }): { token: string } => {
-  const secretKey = appConfig.get('jwt.secretKey');
+  const secretKey = process.env.JWT_SECRET_KEY as string;
   const expiryInSeconds = appConfig.get('jwt.expiry');
 
   const token = jwt.sign(payload, secretKey, {

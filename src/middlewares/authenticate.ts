@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
-import dataSource from 'src/config/ormconfig';
-import { User } from 'src/entities/User.entity';
+import dataSource from '../config/ormconfig';
+import { User } from '../entities/User.entity';
 import { verifyJwt } from '../helpers/utilities';
 import { UnAuthorizedError } from '../errors/UnAuthorizedError';
 import { Request, Response, NextFunction, RequestHandler } from 'express';

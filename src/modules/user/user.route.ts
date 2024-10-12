@@ -5,7 +5,7 @@ import {
 
 import { Router } from 'express';
 import * as userController from './user.controller';
-import { authenticateUserJwt } from 'src/middlewares/authenticate';
+import { authenticateUserJwt } from '../../middlewares/authenticate';
 
 const router = Router();
 

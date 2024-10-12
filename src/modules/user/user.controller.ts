@@ -1,5 +1,5 @@
 import * as userService from './user.service';
-import { PageOptionsDto } from 'src/pagination/page-options.dto';
+import { PageOptionsDto } from '../../pagination/page-options.dto';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
 export const createUser: RequestHandler = async (

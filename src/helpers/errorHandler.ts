@@ -14,6 +14,8 @@ export const handleError = (
       });
     }
 
+    // console.log(responseStream);
+
     return responseStream.status(500).send({
       success: false,
       message:
