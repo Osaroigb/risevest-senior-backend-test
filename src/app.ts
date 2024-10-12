@@ -18,7 +18,7 @@ app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms'),
 );
 app.get('/', (_req: Request, res: Response) => {
-  res.send('Welcome to Senior Backend Test API');
+  res.send('Welcome to Risevest Backend API');
 });
 
 initiateModuleRoutes(app);
