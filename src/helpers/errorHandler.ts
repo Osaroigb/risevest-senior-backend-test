@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { logger } from '../utils/logger';
 import { DomainError } from '../errors/DomainError';
 
 export const handleError = (
@@ -14,8 +15,8 @@ export const handleError = (
       });
     }
 
-    // console.log(responseStream);
-    console.error(error);
+    logger.warn('error from error handler!');
+    logger.error(error);
 
     return responseStream.status(500).send({
       success: false,

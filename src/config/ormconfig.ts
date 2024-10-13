@@ -5,7 +5,7 @@ import { DataSourceOptions, DataSource } from 'typeorm';
 loadEnv();
 const dbConfig = getDBConfig();
 
-export const dataSourceOptions: DataSourceOptions = {
+const dataSourceOptions: DataSourceOptions = {
   ...dbConfig,
   type: <any>dbConfig.type,
   entities: [`${__dirname}/../entities/*entity{.ts,.js}`],
@@ -21,8 +21,8 @@ export const TestDataSource = new DataSource({
   type: 'sqlite',
   database: ':memory:',
   entities: [`${__dirname}/../entities/*entity{.ts,.js}`],
+  logging: true,
   synchronize: true,
-  logging: false,
 });
 
 const dataSource = new DataSource(dataSourceOptions);

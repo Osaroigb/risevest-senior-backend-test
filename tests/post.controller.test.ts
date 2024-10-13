@@ -20,15 +20,15 @@ describe('Post Controller Tests', () => {
       await TestDataSource.initialize();
     }
 
-    // Synchronize the schema
-    await TestDataSource.synchronize(true);
-
     // Assuming you have a user creation process, create a mock user for login
-    await request(app).post('/v1/users').send({
+    const signupResponse = await request(app).post('/v1/users').send({
       name: 'John Doe',
       email: 'john@example.com',
       password: 'Password123!',
     });
+
+    console.warn('Signup response below!');
+    console.log(signupResponse.body);
 
     // Perform login to retrieve the token
     const loginResponse = await request(app)

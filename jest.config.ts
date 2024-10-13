@@ -11,7 +11,12 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
-  testPathIgnorePatterns: ['/node_modules/'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    // '/tests/user.controller.test.ts',
+    // '/tests/post.controller.test.ts',
+    // '/tests/comment.controller.test.ts',
+  ],
 };
 
 export default config;
