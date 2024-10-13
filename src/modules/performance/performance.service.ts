@@ -15,8 +15,6 @@ export const fetchTopUsersWithLatestComments =
         posts ON users.id = posts."userId"
     GROUP BY 
         users.id, users.name
-    ORDER BY 
-        post_count DESC
     LIMIT 3
 ),
 UserLatestComments AS (
@@ -41,7 +39,9 @@ FROM
 LEFT JOIN 
     UserLatestComments ulc ON u.user_id = ulc.user_id
 WHERE 
-    ulc.comment_rank = 1;
+    ulc.comment_rank = 1
+ORDER BY 
+    u.post_count DESC;
     `;
 
     try {

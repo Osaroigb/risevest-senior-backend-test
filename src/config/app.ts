@@ -11,7 +11,7 @@ const appConfig = convict({
     arg: 'port',
     default: 3300,
     doc: 'The port to bind',
-    env: 'APP_PORT',
+    env: 'PORT',
     format: 'port',
   },
   baseUrl: {
