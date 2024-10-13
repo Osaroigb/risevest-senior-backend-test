@@ -1,6 +1,6 @@
 import app from '../src/app';
 import request from 'supertest';
-import { TestDataSource } from '../src/config/ormconfig';
+// import { TestDataSource } from '../src/config/ormconfig';
 import * as postService from '../src/modules/post/post.service';
 import { ResourceNotFoundError } from '../src/errors/ResourceNotFoundError';
 
@@ -16,9 +16,9 @@ describe('Post Controller Tests', () => {
 
   beforeAll(async () => {
     // Initialize the SQLite database before tests
-    if (!TestDataSource.isInitialized) {
-      await TestDataSource.initialize();
-    }
+    // if (!TestDataSource.isInitialized) {
+    //   await TestDataSource.initialize();
+    // }
 
     // Assuming you have a user creation process, create a mock user for login
     const signupResponse = await request(app).post('/v1/users').send({
@@ -42,7 +42,7 @@ describe('Post Controller Tests', () => {
 
   afterAll(async () => {
     // Close the database connection after tests
-    await TestDataSource.destroy();
+    // await TestDataSource.destroy();
   });
 
   describe('POST /users/:id/posts', () => {

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Service for Node.js app
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - NODE_ENV=${NODE_ENV}
+    depends_on:
+      - postgres
+      - redis
+
+  # Service for PostgreSQL
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+
+  # Service for Redis
+  redis:
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+
+# Define volumes for persistent storage
+volumes:
+  postgres_data:

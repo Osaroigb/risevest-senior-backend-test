@@ -1,6 +1,6 @@
 import app from '../src/app';
 import request from 'supertest';
-import { TestDataSource } from '../src/config/ormconfig';
+// import { TestDataSource } from '../src/config/ormconfig';
 import * as commentService from '../src/modules/comment/comment.service';
 import { ResourceNotFoundError } from '../src/errors/ResourceNotFoundError';
 
@@ -18,9 +18,9 @@ describe('Comment Controller Tests', async () => {
 
   beforeAll(async () => {
     // Initialize the SQLite database before tests
-    if (!TestDataSource.isInitialized) {
-      await TestDataSource.initialize();
-    }
+    // if (!TestDataSource.isInitialized) {
+    //   await TestDataSource.initialize();
+    // }
 
     // Create a user and a post for testing
     await request(app).post('/v1/users').send({
@@ -55,7 +55,7 @@ describe('Comment Controller Tests', async () => {
 
   afterAll(async () => {
     // Close the database connection after tests
-    await TestDataSource.destroy();
+    // await TestDataSource.destroy();
   });
 
   describe('POST /posts/:postId/comments', () => {
