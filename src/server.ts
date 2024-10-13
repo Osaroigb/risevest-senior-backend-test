@@ -8,13 +8,11 @@ import {
 import app from './app';
 import http from 'http';
 import stoppable from 'stoppable';
-import appConfig from './config/app';
 import { logger } from './utils/logger';
 import dataSource from './config/ormconfig';
-import { initiateConnection as connectToRedis } from './utils/redis';
+import { initiateConnection as connectToRedis } from './config/redis';
 
-const port =
-  Number(process.env.APP_PORT) || appConfig.get('port') || normalizePort(3300);
+const port = normalizePort(process.env.PORT || '3300');
 app.set('port', port);
 
 /**

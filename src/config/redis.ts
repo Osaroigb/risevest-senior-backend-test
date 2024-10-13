@@ -1,11 +1,15 @@
-import { logger } from './logger';
+import appConfig from './app';
 import { createClient } from 'redis';
-import appConfig from '../config/app';
+import { logger } from '../utils/logger';
 
 const { username, password, host, port } = appConfig.get('redis');
 
+const redisUrl =
+  process.env.REDISCLOUD_URL ||
+  `redis://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${encodeURIComponent(host)}:${port}`;
+
 const client = createClient({
-  url: `redis://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${encodeURIComponent(host)}:${port}`,
+  url: redisUrl,
 });
 
 client.on('connect', (): any => {

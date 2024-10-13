@@ -10,6 +10,9 @@ export interface DatabaseConfig {
   synchronize: boolean;
   logging: boolean;
   autoLoadEntities: boolean;
+  ssl?: {
+    rejectUnauthorized: boolean;
+  };
 }
 
 interface PaginationResponse {

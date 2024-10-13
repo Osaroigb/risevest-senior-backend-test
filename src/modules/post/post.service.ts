@@ -1,5 +1,5 @@
 import dataSource from '../../config/ormconfig';
-import { get, set, del } from '../../utils/redis';
+import { get, set, del } from '../../config/redis';
 import { Post } from '../../entities/Post.entity';
 import { PageDto } from '../../pagination/page.dto';
 import { findUserById } from '../user/user.service';

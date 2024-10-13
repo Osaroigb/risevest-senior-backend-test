@@ -4,7 +4,7 @@ import {
 } from './user.dto';
 
 import dataSource from '../../config/ormconfig';
-import { get, set, del } from '../../utils/redis';
+import { get, set, del } from '../../config/redis';
 import { User } from '../../entities/User.entity';
 import { PageDto } from '../../pagination/page.dto';
 import { ApiResponse } from '../../config/interface';
