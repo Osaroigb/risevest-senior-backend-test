@@ -1,7 +1,7 @@
 # Risevest Backend Service
 
 ## Overview
-The **Risevest Backend Service** is a RESTful API service that supports user authentication, post creation, comment management, and more. It is designed for scalability and security, leveraging Node.js with TypeORM and PostgreSQL for data storage. The service also integrates Redis for caching and session management, allowing fast access to frequently requested data.
+The **Risevest Backend Service** is a RESTful API service that supports user authentication, post creation, comment management, and more. It is designed for scalability and security, leveraging Node.js with TypeORM and PostgreSQL for data storage. The service also integrates Redis for caching, allowing fast access to frequently requested data.
 
 This project provides APIs for user registration, login, post creation, and fetching users with the most recent comments. The service is containerized using Docker, making it easy to set up in both local development and production environments.
 
@@ -9,9 +9,9 @@ This project provides APIs for user registration, login, post creation, and fetc
 - User authentication (signup, login)
 - Post creation and management
 - Comment creation and management
-- Fetch top users with the latest comments
+- Fetch top users with their latest comment
 - PostgreSQL as the database
-- Redis for caching and session management
+- Redis for caching
 - Dockerized setup for easy deployment
 
 ## Table of Contents
@@ -42,27 +42,36 @@ Make sure you have the following installed on your local machine:
 ### Local Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Osaroigb/risevest-senior-backend-test.git
    cd risevest-senior-backend-test
    ```
 
 2. **Install dependencies**
+
    Use npm:
+
    ```bash
    npm install
    ```
+
    Or use Yarn:
+
    ```bash
    yarn install
    ```
 
 3. **Configure Environment Variables**
+
    Create a `.env` file in the root directory based on the `.env.example` file:
+
    ```bash
    cp .env.example .env
    ```
+
    Update the `.env` file with your environment variables, especially for database and Redis configuration:
+
    ```bash
    PORT=3300
    NODE_ENV=development
@@ -79,7 +88,9 @@ Make sure you have the following installed on your local machine:
    ```
 
 4. **Run the application**
+
    To start the application in development mode:
+
    ```bash
    npm run start:dev
    ```
@@ -90,18 +101,22 @@ Make sure you have the following installed on your local machine:
 ### Running with Docker
 
 1. **Configure `.env`**
-   Ensure your `.env` file is properly set up. Use `DATABASE_URL` for Heroku or Docker configurations:
+
+   Ensure your `.env` file is properly set up. Use Docker configurations:
+
    ```bash
-   DATABASE_URL=postgres://username:password@postgres:5432/risevest
+   DATABASE_HOST=postgres
    REDIS_HOST=redis
-   REDIS_PORT=6379
    ```
 
 2. **Run Docker Compose**
+
    Use Docker Compose to build and run your application along with PostgreSQL and Redis:
+
    ```bash
    docker-compose up --build
    ```
+
    This command will:
    - Build the Node.js application
    - Start PostgreSQL, Redis, and the backend service
@@ -148,11 +163,11 @@ Ensure that your local database or Docker services are running during the tests.
 
 The backend service is live and accessible at the following URL:
 
-**[Live URL](https://risevest-backend-d883eb3d4dcd.herokuapp.com/)**
+**[Live URL](https://risevest-backend-d883eb3d4dcd.herokuapp.com)**
 
 You can use tools like [Postman](https://www.postman.com/) or [curl](https://curl.se/) to interact with the available API endpoints.
 
-For detailed information on the available endpoints, request/response formats, and error codes, refer to the **[API Documentation](https://documenter.getpostman.com/view/23691550/2sA358c5dQ)**.
+For detailed information on the available endpoints, request/response formats, and error codes, refer to the **[API Documentation](https://documenter.getpostman.com/view/23691550/2sAXxS9Bot)**.
 
 ---
 
