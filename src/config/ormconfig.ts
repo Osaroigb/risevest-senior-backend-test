@@ -12,18 +12,9 @@ const dataSourceOptions: DataSourceOptions = {
   migrations: [`${__dirname}/../migrations/*{.ts,.js}`],
   bigNumberStrings: true,
   multipleStatements: true,
-  logging: process.env.DATABASE_LOGGING === 'true',
-  synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+  logging: true,
   migrationsRun: false,
 };
-
-// export const TestDataSource = new DataSource({
-//   type: 'sqlite',
-//   database: ':memory:',
-//   entities: [`${__dirname}/../entities/*entity{.ts,.js}`],
-//   logging: true,
-//   synchronize: true,
-// });
 
 const dataSource = new DataSource(dataSourceOptions);
 export default dataSource;

@@ -10,7 +10,7 @@
     "migration:create": "npm run typeorm migration:create",
     "migration:revert": "npm run typeorm migration:revert",
     "migration:show": "npm run typeorm migration:show",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "build": "tsc",

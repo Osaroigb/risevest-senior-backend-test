@@ -1,6 +1,6 @@
 import app from '../src/app';
 import request from 'supertest';
-// import { TestDataSource } from '../src/config/ormconfig';
+import dataSource from '../src/config/ormconfig';
 import * as commentService from '../src/modules/comment/comment.service';
 import { ResourceNotFoundError } from '../src/errors/ResourceNotFoundError';
 
@@ -12,35 +12,36 @@ const mockAddCommentToPost = commentService.addCommentToPost as jest.Mock;
 const mockGetAllCommentsForPost =
   commentService.getAllCommentsForPost as jest.Mock;
 
-describe('Comment Controller Tests', async () => {
+describe('Comment Controller Tests', () => {
   let token: string;
   let postId: number;
+  let userId: number;
 
   beforeAll(async () => {
-    // Initialize the SQLite database before tests
-    // if (!TestDataSource.isInitialized) {
-    //   await TestDataSource.initialize();
-    // }
+    // Initialize the database before tests
+    if (!dataSource.isInitialized) {
+      await dataSource.initialize();
+      await dataSource.synchronize();
+    }
 
     // Create a user and a post for testing
     await request(app).post('/v1/users').send({
-      name: 'John Doe',
-      email: 'john@example.com',
+      name: 'Tensa Zangetsu',
+      email: 'zangetsu@gmail.com',
       password: 'Password123!',
     });
 
     // Perform login to retrieve the token
     const loginResponse = await request(app)
       .post('/v1/users/login')
-      .send({ email: 'john@example.com', password: 'Password123!' });
+      .send({ email: 'zangetsu@gmail.com', password: 'Password123!' });
 
-    console.warn('Login response below!');
-    console.log(loginResponse.body);
     token = loginResponse.body.data.auth.token;
+    userId = loginResponse.body.data.userId;
 
     // Create a post for the user
     const postResponse = await request(app)
-      .post('/v1/users/1/posts')
+      .post(`/v1/users/${userId}/posts`)
       .set('Authorization', `Bearer ${token}`)
       .send({
         title: 'My First Post',
@@ -48,14 +49,14 @@ describe('Comment Controller Tests', async () => {
           'This is the content of the post. It has more than 25 characters.',
       });
 
-    console.warn('Post response below!');
-    console.log(postResponse.body);
     postId = postResponse.body.data.id;
   });
 
   afterAll(async () => {
     // Close the database connection after tests
-    // await TestDataSource.destroy();
+    if (dataSource.isInitialized) {
+      await dataSource.destroy();
+    }
   });
 
   describe('POST /posts/:postId/comments', () => {
@@ -74,7 +75,7 @@ describe('Comment Controller Tests', async () => {
       });
 
       const res = await request(app)
-        .post(`/v1/posts/${postId}/comments`)
+        .post('/v1/posts/1/comments')
         .set('Authorization', `Bearer ${token}`)
         .send({
           content: 'This is a valid comment',
@@ -123,7 +124,7 @@ describe('Comment Controller Tests', async () => {
 
       expect(res.status).toBe(400);
       expect(res.body.message).toContain(
-        'Content must be at least 5 characters',
+        'Comment must be between 5 and 225 characters',
       );
     });
 
@@ -167,7 +168,7 @@ describe('Comment Controller Tests', async () => {
       });
 
       const res = await request(app)
-        .get(`/v1/posts/${postId}/comments`)
+        .get('/v1/posts/1/comments')
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);

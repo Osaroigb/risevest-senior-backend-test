@@ -1,6 +1,6 @@
 import app from '../src/app';
 import request from 'supertest';
-// import { TestDataSource } from '../src/config/ormconfig';
+import dataSource from '../src/config/ormconfig';
 import * as postService from '../src/modules/post/post.service';
 import { ResourceNotFoundError } from '../src/errors/ResourceNotFoundError';
 
@@ -13,36 +13,36 @@ const mockProcessGetUserPosts = postService.getPostsForUser as jest.Mock;
 
 describe('Post Controller Tests', () => {
   let token: string;
+  let userId: number;
 
   beforeAll(async () => {
-    // Initialize the SQLite database before tests
-    // if (!TestDataSource.isInitialized) {
-    //   await TestDataSource.initialize();
-    // }
+    // Initialize the database before tests
+    if (!dataSource.isInitialized) {
+      await dataSource.initialize();
+      await dataSource.synchronize();
+    }
 
-    // Assuming you have a user creation process, create a mock user for login
-    const signupResponse = await request(app).post('/v1/users').send({
-      name: 'John Doe',
-      email: 'john@example.com',
+    // Create a user for testing
+    await request(app).post('/v1/users').send({
+      name: 'Aomine Diaki',
+      email: 'aomine@gmail.com',
       password: 'Password123!',
     });
-
-    console.warn('Signup response below!');
-    console.log(signupResponse.body);
 
     // Perform login to retrieve the token
     const loginResponse = await request(app)
       .post('/v1/users/login')
-      .send({ email: 'john@example.com', password: 'Password123!' });
+      .send({ email: 'aomine@gmail.com', password: 'Password123!' });
 
-    console.warn('Login response below!');
-    console.log(loginResponse.body);
     token = loginResponse.body.data.auth.token;
+    userId = loginResponse.body.data.userId;
   });
 
   afterAll(async () => {
     // Close the database connection after tests
-    // await TestDataSource.destroy();
+    if (dataSource.isInitialized) {
+      await dataSource.destroy();
+    }
   });
 
   describe('POST /users/:id/posts', () => {
@@ -62,7 +62,7 @@ describe('Post Controller Tests', () => {
       });
 
       const res = await request(app)
-        .post('/v1/users/1/posts')
+        .post(`/v1/users/${userId}/posts`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           title: 'My First Post',
@@ -77,7 +77,7 @@ describe('Post Controller Tests', () => {
 
     it('should return 400 if title is less than 5 characters', async () => {
       const res = await request(app)
-        .post('/v1/users/1/posts')
+        .post(`/v1/users/${userId}/posts`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           title: 'Hi',
@@ -93,7 +93,7 @@ describe('Post Controller Tests', () => {
 
     it('should return 400 if content is less than 25 characters', async () => {
       const res = await request(app)
-        .post('/v1/users/1/posts')
+        .post(`/v1/users/${userId}/posts`)
         .set('Authorization', `Bearer ${token}`)
         .send({
           title: 'Valid Title',
@@ -138,7 +138,7 @@ describe('Post Controller Tests', () => {
 
     it('should return 401 if Authorization header is not provided', async () => {
       const res = await request(app)
-        .post('/v1/users/1/posts') // No Authorization header
+        .post(`/v1/users/${userId}/posts`) // No Authorization header
         .send({
           title: 'My First Post',
           content:
@@ -174,7 +174,7 @@ describe('Post Controller Tests', () => {
       });
 
       const res = await request(app)
-        .get('/v1/users/1/posts')
+        .get(`/v1/users/${userId}/posts`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
@@ -205,7 +205,7 @@ describe('Post Controller Tests', () => {
     });
 
     it('should return 401 if Authorization header is not provided', async () => {
-      const res = await request(app).get('/v1/users/1/posts'); // No Authorization header
+      const res = await request(app).get(`/v1/users/${userId}/posts`); // No Authorization header
 
       expect(res.status).toBe(401);
       expect(res.body.message).toContain('Authorization token is required');

@@ -8,7 +8,6 @@ export interface DatabaseConfig {
   username: string;
   password: string;
   synchronize: boolean;
-  logging: boolean;
   autoLoadEntities: boolean;
   ssl?: {
     rejectUnauthorized: boolean;

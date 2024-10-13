@@ -1,11 +1,13 @@
 # Risevest Backend Service
 
 ## Overview
+
 The **Risevest Backend Service** is a RESTful API service that supports user authentication, post creation, comment management, and more. It is designed for scalability and security, leveraging Node.js with TypeORM and PostgreSQL for data storage. The service also integrates Redis for caching, allowing fast access to frequently requested data.
 
 This project provides APIs for user registration, login, post creation, and fetching users with the most recent comments. The service is containerized using Docker, making it easy to set up in both local development and production environments.
 
 ## Features
+
 - User authentication (signup, login)
 - Post creation and management
 - Comment creation and management
@@ -15,20 +17,21 @@ This project provides APIs for user registration, login, post creation, and fetc
 - Dockerized setup for easy deployment
 
 ## Table of Contents
+
 - [Requirements](#requirements)
 - [Setup Instructions](#setup-instructions)
   - [Local Setup](#local-setup)
   - [Running with Docker](#running-with-docker)
-- [Environment Variables](#environment-variables)
 - [API Endpoints](#api-endpoints)
 - [Running Tests](#running-tests)
 - [Deployment](#deployment)
-  - [Deploying to Heroku](#deploying-to-heroku)
 
 ---
 
 ## Requirements
+
 Make sure you have the following installed on your local machine:
+
 - [Node.js](https://nodejs.org/en/) (v16.x or higher)
 - [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 - [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
@@ -94,6 +97,7 @@ Make sure you have the following installed on your local machine:
    ```bash
    npm run start:dev
    ```
+
    The API will be accessible at [http://localhost:3300](http://localhost:3300).
 
 ---
@@ -102,7 +106,7 @@ Make sure you have the following installed on your local machine:
 
 1. **Configure `.env`**
 
-   Ensure your `.env` file is properly set up. Use Docker configurations:
+   Ensure your `.env` file is properly set up with Docker configurations:
 
    ```bash
    DATABASE_HOST=postgres
@@ -118,6 +122,7 @@ Make sure you have the following installed on your local machine:
    ```
 
    This command will:
+
    - Build the Node.js application
    - Start PostgreSQL, Redis, and the backend service
 
@@ -129,33 +134,62 @@ Make sure you have the following installed on your local machine:
 ## API Endpoints
 
 ### User Authentication
+
 - `POST /v1/users/signup`: Register a new user.
 - `POST /v1/users/login`: Authenticate a user and obtains a JWT token.
 
 ### Posts
+
 - `POST /v1/users/:id/posts`: Create a new post for a user.
 - `GET /v1/users/:id/posts`: Get all posts for a specific user.
 
 ### Comments
+
 - `POST /v1/posts/:postId/comments`: Add a comment to a post.
 - `GET /v1/posts/:postId/comments`: Get all comments for a post.
 
 ### Fetch Top Users with Latest Comments
+
 - `GET /v1/performance/top-users`: Fetch top posters with their latest comments.
 
 ---
 
 ## Running Tests
 
-The application is tested using Jest. To run the test suite:
+The application is tested using Jest. Before running the tests, ensure that your environment variables for the test database are properly set. You can do this by adding the following to your `.env` file:
 
 ```bash
-npm run test
+# Test Database Configuration
+TEST_DATABASE_HOST=127.0.0.1
+TEST_DATABASE_PORT=5432
+TEST_DATABASE_NAME=test_risevest
+TEST_DATABASE_USER=postgres
+TEST_DATABASE_PASSWORD=your_password
 ```
 
-Ensure that your local database or Docker services are running during the tests.
+Ensure that your test database is running locally, and that it is properly configured to accept connections.
 
----
+### Running Individual Test Files
+
+You can run individual test files using the following commands:
+
+1. To run the `user.controller.test.ts` tests:
+
+   ```bash
+   npm run test -- tests/user.controller.test.ts
+   ```
+
+2. To run the `post.controller.test.ts` tests:
+
+   ```bash
+   npm run test -- tests/post.controller.test.ts
+   ```
+
+3. To run the `comment.controller.test.ts` tests:
+
+   ```bash
+   npm run test -- tests/comment.controller.test.ts
+   ```
 
 ## Deployment
 
